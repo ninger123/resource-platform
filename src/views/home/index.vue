@@ -6,16 +6,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import tutorIndex from './tutor'
-import studentIndex from './student'
-import schoolIndex from './school'
+import controllerIndex from './controller'
+import applicantIndex from './applicant'
 
 export default {
   name: 'Home',
-  components: { studentIndex, tutorIndex, schoolIndex },
+  components: { applicantIndex, controllerIndex },
   data() {
     return {
-      currentRole: 'studentIndex'
+      currentRole: 'applicantIndex'
     }
   },
   computed: {
@@ -27,11 +26,9 @@ export default {
   },
   created() {
     if (this.roles.includes('applicant')) {
-      this.currentRole = 'studentIndex'
-    } else if(this.roles.includes('tutor')) {
-      this.currentRole = 'controller'
-    } else {
-      this.currentRole = 'schoolIndex'
+      this.currentRole = 'applicantIndex'
+    } else if(this.roles.includes('controller')) {
+      this.currentRole = 'controllerIndex'
     }
   }
 }

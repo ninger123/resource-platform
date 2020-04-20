@@ -46,8 +46,10 @@ router.beforeEach(async(to, from, next) => {
           const roleType = data.userRole
           let roles
           if(roleType === 1 ) {
+            // 用户
             roles = ['applicant']
           } else if(roleType === 2) {
+            // 管理员
             roles = ['controller']
           }
           

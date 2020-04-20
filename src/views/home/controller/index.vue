@@ -1,13 +1,13 @@
 <template>
   <div class="home-student-container">
-    <div class="student-title">欢迎</div>
+    <div class="student-title">用户２　管理者</div>
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'studentIndex',
+  name: 'controllerIndex',
   data() {
     return {
     }

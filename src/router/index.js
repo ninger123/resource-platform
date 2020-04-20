@@ -89,6 +89,122 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/news-manage',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/news-manage/index'),
+        name: 'NewsManage',
+        meta: { title: '公告管理',roles: ['controller'], icon: 'documentation' }
+      }
+    ]
+  },
+  {
+    path: '/resource-type',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/resource-type/index'),
+        name: 'ResourceType',
+        meta: { title: '资源类型',roles: ['controller'], icon: 'documentation'}
+      }
+    ]
+  },
+  {
+    path: '/host-information',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/host-information/index'),
+        name: 'HostInformation',
+        meta: { title: '主机信息',roles: ['controller'], icon: 'documentation'}
+      }
+    ]
+  },
+  {
+    path: '/application-auditing',
+    component: Layout,
+    redirect: '/application-manage/auditing',
+    alwaysShow: true, // will always show the root menu
+    name: 'ApplicationManage',
+    meta: {
+      title: '申请管理',
+      icon: 'edit',
+      roles: ['controller']
+    },
+    children: [
+      {
+        path: 'auditing',
+        component: () => import('@/views/application-manage/auditing'),
+        name: 'AuditingApplication',
+        meta: {
+          title: '申请审核',
+          icon: 'documentation',
+          roles: ['controller']
+        }
+      },
+      {
+        path: 'record',
+        component: () => import('@/views/application-manage/record'),
+        name: 'RecordApplication',
+        meta: {
+          title: '申请记录',
+          icon: 'documentation',
+          roles: ['controller']
+        }
+      }
+    ]
+  },
+  {
+    path: '/user-manage',
+    component: Layout,
+    redirect: '/users/auditing',
+    alwaysShow: true, // will always show the root menu
+    name: 'userManage',
+    meta: {
+      title: '人员管理',
+      icon: 'people',
+      roles: ['controller']
+    },
+    children: [
+      {
+        path: 'auditing',
+        component: () => import('@/views/users/auditing'),
+        name: 'AuditingUser',
+        meta: {
+          title: '人员审核',
+          icon: 'documentation',
+          roles: ['controller']
+        }
+      },
+      {
+        path: 'all',
+        component: () => import('@/views/users/all'),
+        name: 'AllUser',
+        meta: {
+          title: '所有人员',
+          icon: 'documentation',
+          roles: ['controller']
+        }
+      }
+    ]
+  },
+  {
+    path: '/department-manage',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/department-manage/index'),
+        name: 'DepartmentManage',
+        meta: { title: '部门管理',roles: ['controller'], icon: 'documentation' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

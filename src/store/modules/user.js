@@ -67,8 +67,10 @@ const actions = {
         const roleType = data.userRole
         let roles
         if(roleType === 1 ) {
+          // 申请者
           roles = ['applicant']
         } else if(roleType === 2) {
+          // 管理员
           roles = ['controller']
         }
 
@@ -84,7 +86,7 @@ const actions = {
         }
         commit('SET_ROLES', roles)
         commit('SET_UID', uid)
-        commit('SET_MYNAME',name)
+        commit('SET_NAME',name)
         commit('SET_AVATAR', avatar)
         commit('SET_PHONE',phone)
         commit('SET_EMAIL',email)
