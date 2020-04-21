@@ -31,24 +31,35 @@ export function regist(data) {
   })
 }
 
-export function getUserList() {
+// 管理员查询所有用户的列表
+export function getAllUsers() {
   return request({
-    url:'user/list',
-    method: 'post'
+    url:'/user/list',
+    method:'post'
   })
 }
 
-export function addUser(data) {
+// 管理员查询待审核用户的列表
+export function getExamineList() {
   return request({
-    url:'user/add',
+    url:'/user/examine_list',
+    method:'post'
+  })
+}
+
+// 管理员查看一个用户的详情页
+export function getUserDetail(data) {
+  return request({
+    url:"/user/detail",
     method:'post',
     data
   })
 }
 
-export function deleteUser(data) {
+// 管理员审核用户注册的申请
+export function examineUser(data) {
   return request({
-    url:'user/delete',
+    url:'/user/examine',
     method:'post',
     data
   })

@@ -160,7 +160,7 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/user-manage',
+    path: '/users',
     component: Layout,
     redirect: '/users/auditing',
     alwaysShow: true, // will always show the root menu
@@ -190,9 +190,18 @@ export const asyncRoutes = [
           icon: 'documentation',
           roles: ['controller']
         }
-      }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/users/detail'),
+        name: 'Detail',
+        hidden: true,
+        meta: { 
+          title: '人员详情',noCache: true, icon: 'tab', roles: ['controller'] }
+      },
     ]
   },
+  
   {
     path: '/department-manage',
     component: Layout,

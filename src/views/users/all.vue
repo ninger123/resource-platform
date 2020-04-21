@@ -2,7 +2,6 @@
   <div class="all-user-container">
       <div class="title"><span>所有人员</span></div>
       <div class="content">
-      <el-button style="background:#42b983;color:white;width:120px;" class="new-add" @click="dialogVisible = true">发布公告</el-button>
         <div class="table" style="width:952px">
             <el-table
               :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
@@ -16,7 +15,7 @@
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="email"
+                prop="eMail"
                 label="邮箱"
                 width="350">
               </el-table-column>
@@ -50,6 +49,7 @@
 </template>
 
 <script>
+import { getAllUsers } from '@/api/user'
 
 export default {
   name: 'AllUser',
@@ -59,38 +59,7 @@ export default {
        currentPage:1,
        pagesize:9,
        total:6,
-       tableData: [
-        {
-         name:'小马',
-         email:'17691191896@163.com',
-         department:'计算机科学与技术',
-        },
-        {
-         name:'小李',
-         email:'17691191896@163.com',
-        department:'计算机科学与技术',
-        },
-        {
-         name:'小张',
-         email:'17691191896@163.com',
-         department:'计算机科学与技术',
-        },
-        {
-         name:'小王',
-         email:'17691191896@163.com',
-         department:'计算机科学与技术',
-        },
-        {
-         name:'小申',
-         email:'17691191896@163.com',
-         department:'计算机科学与技术',
-        },
-        {
-         name:'小刘',
-         email:'17691191896@163.com',
-         department:'计算机科学与技术',
-        },
-       ],
+       tableData: [],
        form: {
           username: '',
           password: '',
@@ -99,6 +68,11 @@ export default {
     }
   },
   created() {
+    getAllUsers().then(response => {
+      if(response.code === 200) {
+        this.tableData = response.data
+      }
+    })
   },
   methods: {
       handleSizeChange(val) {
@@ -107,6 +81,9 @@ export default {
       handleCurrentChange(val) {
         this.currentPage = val;
       },
+      seeDetail(row) {
+        this.$router.push({path:'/users/detail',query:{id:row.id}})
+      }
   }
 }
 </script>
@@ -133,7 +110,7 @@ export default {
       margin-top: 20px;
 
       .table{
-        margin-top: 20px;
+        margin-top: 30px;
 
         .pagination{
           width: 600px;

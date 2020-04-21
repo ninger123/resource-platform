@@ -11,12 +11,12 @@
               :current-page.sync="currentPage"
               style="width: 100%">
               <el-table-column
-                prop="id"
+                prop="did"
                 label="序号"
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="department"
+                prop="name"
                 label="部门"
                 width="250">
               </el-table-column>
@@ -26,7 +26,7 @@
                 width="350">
               </el-table-column>
               <el-table-column
-                prop="time"
+                prop="regTime"
                 label="时间"
                 width="200">
               </el-table-column>
@@ -35,7 +35,7 @@
                 label="操作"
                 width="250">
                 <template slot-scope="scope">
-                  <el-button style="background:#42b983;color:white;margin:0 30px;" @click="seeDetail(scope.row)">修改</el-button>
+                  <el-button style="background:#42b983;color:white;margin:0 30px;" @click="alterDepartment(scope.row)">修改</el-button>
                   <el-popover
                       placement="top"
                       title="确定删除此用户吗？"
@@ -64,27 +64,38 @@
             </div>
         </div>
     <el-dialog
-        title="添加用户"
-        :visible.sync="dialogVisible"
+        title="新增部门信息"
+        :visible.sync="addVisible"
         width="30%"
         :before-close="handleClose">
-        <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="用户名">
-                <el-input v-model="form.username"></el-input>
+        <el-form ref="addForm" :model="addForm" label-width="80px">
+            <el-form-item label="名称">
+                <el-input v-model="addForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="密码">
-                <el-input v-model="form.password"></el-input>
-            </el-form-item>
-            <el-form-item label="权限授权">
-                <el-radio-group v-model="form.userRole">
-                    <el-radio label="管理员"></el-radio>
-                    <el-radio label="教师"></el-radio>
-                    <el-radio label="学生"></el-radio>
-                </el-radio-group>
+            <el-form-item label="介绍">
+                <el-input type="textarea" v-model="addForm.introduce"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">确定</el-button>
-                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="addSubmit">确定</el-button>
+                <el-button @click="addVisible = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+    <el-dialog
+        title="修改主机信息"
+        :visible.sync="alterVisible"
+        width="30%"
+        :before-close="handleClose">
+        <el-form ref="alterForm" :model="alterForm" label-width="80px">
+            <el-form-item label="名称">
+                <el-input v-model="alterForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="介绍">
+                <el-input type="textarea" v-model="alterForm.introduce"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="alterSubmit">确定</el-button>
+                <el-button @click="alterVisible = false">取消</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -93,105 +104,70 @@
 </template>
 
 <script>
+import { getDepartmentList,addDepartment,updateDepartment } from '@/api/department'
 
 export default {
   name: 'DepartmentManage',
   data() {
     return {
-       dialogVisible: false,
-       currentPage:1,
-       pagesize:9,
-       total:12,
-       tableData: [
-        {
-         id:1,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:2,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:3,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:4,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:5,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:6,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:7,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:8,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:9,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:10,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:11,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-        {
-         id:12,
-         department:'计算机科学与技术',
-         introduce:'培养面向工业与信息化建设,具有良好的道德修养/扎实的理由基础的计算机行业人才',
-         time:'2005/02/11',
-        },
-       ],
-       form: {
-          username: '',
-          password: '',
-          userRole: '',
+      addVisible: false,
+      alterVisible:false,
+      currentPage:1,
+      pagesize:9,
+      total:12,
+      tableData: [],
+      addForm: {
+        name:'',
+        introduce:''
       },
+      alterForm: {
+        did:'',
+        name:'',
+        introduce:''
+      }
     }
   },
   created() {
+    getDepartmentList().then(response => {
+      if(response.code === 200) {
+        this.tableData = response.data
+      }
+    })
   },
   methods: {
-      handleSizeChange(val) {
-        this.pagesize=val;
-      },
-      handleCurrentChange(val) {
-        this.currentPage = val;
-      },
+    // 新增部门信息,打开弹窗
+    addHost() {
+      this.addVisible = true
+    },
+    // 确认新增部门信息
+    addSubmit() {
+      addDepartment(this.addForm).then(response => {
+        if(response.code === 200 ){
+          console.log('部门新增成功')
+        }
+      })
+    },
+    // 修改部门信息,打开弹窗
+    alterDepartment(row) {
+      this.alterForm.did = row.did
+      this.alterForm.name = row.name
+      this.alterForm.introduce = row.introduce
+      this.alterVisible = true
+    },
+    // 确认修改部门信息
+    alterSubmit() {
+      updateDepartment(this.alterForm).then(response => {
+        if(response.code === 200 ){
+          console.log('部门修改成功')
+        }
+      })
+    },
+    handleSizeChange(val) {
+      this.pagesize=val;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+    },
   }
 }
 </script>
