@@ -11,12 +11,12 @@
               :current-page.sync="currentPage"
               style="width: 100%">
               <el-table-column
-                prop="id"
+                prop="hiid"
                 label="序号"
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="hostName"
+                prop="name"
                 label="主机名"
                 width="250">
               </el-table-column>
@@ -31,7 +31,7 @@
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="post"
+                prop="port"
                 label="端口"
                 width="200">
               </el-table-column>
@@ -43,7 +43,7 @@
                   <el-button style="background:#42b983;color:white;margin:0 30px;" @click="alterHost(scope.row)">修改</el-button>
                   <el-popover
                       placement="top"
-                      title="确定删除此用户吗？"
+                      title="确定删除此主机吗？"
                       width="200"
                       trigger="click"
                       v-model="scope.row.visible"
@@ -75,22 +75,25 @@
         :before-close="handleClose">
         <el-form ref="addForm" :model="addForm" label-width="80px">
             <el-form-item label="主机名">
-                <el-input v-model="addForm.hostName"></el-input>
+                <el-input v-model="addForm.name"></el-input>
             </el-form-item>
             <el-form-item label="资源类型">
                 <el-select v-model="addForm.resourceType" placeholder="请选择">
-                  <el-option label="Hadoop大数据处理平台" value="shanghai"></el-option>
-                  <el-option label="浪潮服务器" value="beijing"></el-option>
+                   <el-option
+                      v-for="item in resourceTypes"
+                      :key="item.rtid"
+                      :label="item.resourceName"
+                      :value="item.resourceName"/>
                 </el-select>
             </el-form-item>
             <el-form-item label="访问地址">
                 <el-input v-model="addForm.address"></el-input>
             </el-form-item>
             <el-form-item label="端口">
-                <el-input v-model="addForm.post"></el-input>
+                <el-input v-model="addForm.port" placeholder="不填即为默认"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">确定</el-button>
+                <el-button type="primary" @click="addSubmit">确定</el-button>
                 <el-button @click="addVisible = false">取消</el-button>
             </el-form-item>
         </el-form>
@@ -102,22 +105,25 @@
         :before-close="handleClose">
         <el-form ref="alterForm" :model="alterForm" label-width="80px">
             <el-form-item label="主机名">
-                <el-input v-model="alterForm.hostName"></el-input>
+                <el-input v-model="alterForm.name"></el-input>
             </el-form-item>
             <el-form-item label="资源类型">
                 <el-select v-model="alterForm.resourceType" placeholder="请选择">
-                  <el-option label="Hadoop大数据处理平台" value="shanghai"></el-option>
-                  <el-option label="浪潮服务器" value="beijing"></el-option>
+                  <el-option
+                      v-for="item in resourceTypes"
+                      :key="item.rtid"
+                      :label="item.resourceName"
+                      :value="item.resourceName"/>
                 </el-select>
             </el-form-item>
             <el-form-item label="访问地址">
                 <el-input v-model="alterForm.address"></el-input>
             </el-form-item>
             <el-form-item label="端口">
-                <el-input v-model="alterForm.post"></el-input>
+                <el-input v-model="alterForm.port"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">确定</el-button>
+                <el-button type="primary" @click="alterSubmit">确定</el-button>
                 <el-button @click="alterVisible = false">取消</el-button>
             </el-form-item>
         </el-form>
@@ -127,117 +133,48 @@
 </template>
 
 <script>
+import { getHostList,deleteHost,addHost } from '@/api/host'
+import { getResourceType } from '@/api/resource'
 
 export default {
   name: 'HostInformation',
+  inject:['reload'],    //注入App里的reload方法
   data() {
     return {
       addVisible: false,
       alterVisible: false,
       currentPage:1,
       pagesize:9,
-      total:12,
-      tableData: [
-        {
-         id:1,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:2,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:3,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:4,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:5,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:6,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:7,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:8,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:9,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:10,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:11,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-        {
-         id:12,
-         hostName:'Hadoopxxxx01',
-         resourceType:'Hadoop大数据处理平台',
-         address:'123.220.255.204',
-         post:'3366'
-        },
-       ],
+      total:0,
+      tableData: [],
+      resourceTypes:[],
       addForm: {
-        hostName: '',
+        name: '',
         resourceType: '',
         address: '',
-        post:''
+        port:''
       },
       alterForm: {
-        hostName: '',
+        hiid:'',
+        name: '',
         resourceType: '',
         address: '',
-        post:''
+        port:''
       }
     }
   },
   created() {
+    getHostList().then(response => {
+      if(response.code === 200) {
+        this.tableData = response.data
+        this.total = response.data.length
+      }
+    })
+    getResourceType().then(response => {
+      if(response.code === 200 ) {
+        this.resourceTypes = response.data
+      }
+    })
   },
   methods: {
     // 新增主机信息
@@ -246,15 +183,25 @@ export default {
     },
     // 修改主机信息
     alterHost(row) {
-      this.alterForm.hostName = row.hostName
+      this.alterForm.hiid = row.hiid
+      this.alterForm.name = row.name
       this.alterForm.resourceType = row.resourceType
       this.alterForm.address = row.address
-      this.alterForm.post = row.post
+      this.alterForm.port = row.port
       this.alterVisible = true
     },
     // 删除主机信息
     deleteHost(row) {
-
+      deleteHost({hiid:row.hiid}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '删除成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+        row.visible = false
+      })
     },
     handleSizeChange(val) {
       this.pagesize=val;
@@ -269,8 +216,31 @@ export default {
         })
         .catch(_ => {});
     },
-    onSubmit() {
-
+    // 新增主机信息
+    addSubmit() {
+      const {name,resourceType,address,port} = this.addForm
+      addHost({resource_name:resourceType,address,host_name:name,port}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '新增成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+      })
+    },
+    // 修改主机信息
+    alterSubmit() {
+      const {hiid,name,resourceType,address,port} = this.alterForm
+      addHost({hiid,resource_name:resourceType,address,host_name:name,port}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '修改成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+      })
     }
   }
 }

@@ -90,14 +90,22 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/news-manage',
+    path: '/news',
     component: Layout,
+    redirect: '/news/index',
     children: [
       {
         path: 'index',
-        component: () => import('@/views/news-manage/index'),
+        component: () => import('@/views/news/index'),
         name: 'NewsManage',
         meta: { title: '公告管理',roles: ['controller'], icon: 'documentation' }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/news/detail'),
+        name: 'NewsDetail',
+        hidden: true,
+        meta: { title: '公告详情',noCache: true,roles: ['controller']}
       }
     ]
   },
@@ -197,7 +205,7 @@ export const asyncRoutes = [
         name: 'Detail',
         hidden: true,
         meta: { 
-          title: '人员详情',noCache: true, icon: 'tab', roles: ['controller'] }
+          title: '人员详情',noCache: true, roles: ['controller'] }
       },
     ]
   },

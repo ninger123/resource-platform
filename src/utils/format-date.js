@@ -22,3 +22,13 @@ export function formatDay(date) {
     var day=date.getDate();      //返回日期月份中的天数（1到31）
     return month+"月"+day+"日"; 
 }
+
+export function regToNormal(date) {
+    return date.substring(0,10);
+}
+
+export function regToTime(date) {
+    var preTimeArr = date.split("T")
+    var timeArr = preTimeArr[1].split(".")
+    return preTimeArr[0] + ' ' + timeArr[0]
+}

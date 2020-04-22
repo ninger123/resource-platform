@@ -11,7 +11,7 @@
               :current-page.sync="currentPage"
               style="width: 100%">
               <el-table-column
-                prop="id"
+                prop="rtid"
                 label="序号"
                 width="200">
               </el-table-column>
@@ -21,17 +21,19 @@
                 width="300">
               </el-table-column>
               <el-table-column
-                prop="resourceIntroduce"
+                prop="introduction"
                 label="资源介绍"
                 width="350">
               </el-table-column>
               <el-table-column
-                prop="doc"
                 label="使用说明文档"
                 width="200">
+                 <template slot-scope="scope">
+                   <a :href="[scope.row.file]" class="a-link">说明文档</a>
+                 </template>
               </el-table-column>
               <el-table-column
-                prop="time"
+                prop="regTime"
                 label="时间"
                 width="200">
               </el-table-column>
@@ -69,26 +71,50 @@
             </div>
         </div>
     <el-dialog
-        title="添加用户"
-        :visible.sync="dialogVisible"
+        title="新增资源类型"
+        :visible.sync="addVisible"
         width="30%"
         :before-close="handleClose">
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form ref="addForm" :model="addForm" label-width="80px">
             <el-form-item label="资源名">
-                <el-input v-model="form.typeName"></el-input>
+                <el-input v-model="addForm.resourceName"></el-input>
             </el-form-item>
             <el-form-item label="资源简介">
-                <el-input v-model="form.typeIntroduce"></el-input>
+                <el-input type="textarea" v-model="addForm.introduction"></el-input>
             </el-form-item>
              <el-form-item label="图片">
-                <el-input v-model="form.typePicture"></el-input>
+                <el-input v-model="addForm.image"></el-input>
             </el-form-item>
-             <el-form-item label="资源说明文档">
-                <el-input v-model="form.typeDoc"></el-input>
+             <el-form-item label="说明文档">
+                <el-input v-model="addForm.file"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">提交</el-button>
-                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button @click="addVisible = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+    <el-dialog
+        title="修改资源类型"
+        :visible.sync="alterVisible"
+        width="30%"
+        :before-close="handleClose">
+        <el-form ref="alterForm" :model="alterForm" label-width="80px">
+            <el-form-item label="资源名">
+                <el-input v-model="alterForm.resourceName"></el-input>
+            </el-form-item>
+            <el-form-item label="资源简介">
+                <el-input type="textarea" v-model="alterForm.introduction"></el-input>
+            </el-form-item>
+             <el-form-item label="图片">
+                <el-input v-model="alterForm.image"></el-input>
+            </el-form-item>
+             <el-form-item label="说明文档">
+                <el-input v-model="alterForm.file"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">提交</el-button>
+                <el-button @click="alterVisible = false">取消</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -97,122 +123,67 @@
 </template>
 
 <script>
+import { getResourceType,deleteResourceType } from '@/api/resource'
+import { regToNormal } from '@/utils/format-date'
 
 export default {
   name: 'ResourceType',
+  inject:['reload'],    //注入App里的reload方法
   data() {
     return {
-       dialogVisible: false,
+       addVisible: false,
+       alterVisible: false,
        currentPage:1,
        pagesize:9,
-       total:12,
-       tableData: [
-        {
-         id:1,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:2,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/16',
-        },
-        {
-         id:3,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/13',
-        },
-        {
-         id:4,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:5,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:6,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:7,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:8,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:9,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:10,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:11,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-        {
-         id:12,
-         resourceName:'Hadoop大数据处理平台',
-         resourceIntroduce:'(20台服务器集群),用于大数据处理',
-         doc:'说明文档',
-         time:'2020/03/12',
-        },
-       ],
-       form: {
-          typeName: '',
-          typeIntroduce: '',
-          typePicture: '',
-          typeDoc:''
+       total:0,
+       tableData: [],
+       addForm: {
+        resourceName: '',
+        introduction: '',
+        image: '',
+        file:''
       },
+      alterForm: {
+        resourceName:'',
+        introduction:'',
+        image:'',
+        file:''
+      }
     }
   },
   created() {
+    getResourceType().then(response => {
+      if(response.code === 200) {
+        response.data.forEach(item =>{
+          item.regTime = regToNormal(item.regTime)
+          item.visible = false
+        })
+        this.total = response.data.length
+        this.tableData = response.data
+      }
+    })
   },
   methods: {
     // 新增资源类型
     addType() {
-      this.dialogVisible = true
+      this.addVisible = true
     },
     // 修改资源类型
     alterType(row) {
-      this.dialogVisible = true
+      this.alterVisible = true
     },
     // 删除资源类型
     deleteType(row) {
+      deleteResourceType({rtid:row.rtid}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '删除成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+        row.visible = false
+      })
     },
     handleSizeChange(val) {
       this.pagesize=val;
@@ -220,6 +191,14 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
     },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
+    onSubmit() {}
   }
 }
 </script>
@@ -247,6 +226,11 @@ export default {
 
       .table{
         margin-top: 20px;
+
+        .a-link{
+          color:rgb(72, 139, 246);
+          text-decoration: underline;
+        }
 
         .pagination{
           width: 600px;

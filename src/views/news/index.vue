@@ -11,17 +11,17 @@
               :current-page.sync="currentPage"
               style="width: 100%">
               <el-table-column
-                prop="id"
+                prop="nid"
                 label="序号"
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="newsName"
+                prop="title"
                 label="公告名"
                 width="350">
               </el-table-column>
               <el-table-column
-                prop="time"
+                prop="regTime"
                 label="时间"
                 width="200">
               </el-table-column>
@@ -34,13 +34,13 @@
                   <el-button style="background:#42b983;color:white;margin:0 30px;" @click="seeDetail(scope.row)">修改</el-button>
                   <el-popover
                       placement="top"
-                      title="确定删除此用户吗？"
+                      title="确定删除此公告吗？"
                       width="200"
                       trigger="click"
                       v-model="scope.row.visible"
                     >
                         <div style="text-align: right; margin: 0">
-                          <el-button type="primary" size="mini" @click="deleteUser(scope.row)">确定</el-button>
+                          <el-button type="primary" size="mini" @click="deleteNews(scope.row)">确定</el-button>
                           <el-button size="mini" @click="scope.row.visible = false">取消</el-button>
                         </div>
                         <el-button type="danger" slot="reference">删除</el-button>
@@ -89,77 +89,19 @@
 </template>
 
 <script>
+import { getNewsList,deleteNews } from '@/api/news'
+import { regToNormal } from '@/utils/format-date'
 
 export default {
   name: 'NewsManage',
+  inject:['reload'],    //注入App里的reload方法
   data() {
     return {
        dialogVisible: false,
        currentPage:1,
        pagesize:9,
-       total:12,
-       tableData: [
-        {
-         id:1,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:2,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/16',
-        },
-        {
-         id:3,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/13',
-        },
-        {
-         id:4,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:5,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:6,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:7,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:8,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:9,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:10,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:11,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-        {
-         id:12,
-         newsName:'书记发表重要的讲话',
-         time:'2020/03/12',
-        },
-       ],
+       total:0,
+       tableData: [],
        form: {
           username: '',
           password: '',
@@ -168,14 +110,51 @@ export default {
     }
   },
   created() {
+    getNewsList().then(response => {
+      if(response.code === 200) {
+        response.data.forEach(item =>{
+          item.regTime = regToNormal(item.regTime)
+          item.visible = false
+        })
+        this.total = response.data.length
+        this.tableData = response.data
+      }
+    })
   },
   methods: {
-      handleSizeChange(val) {
-        this.pagesize=val;
-      },
-      handleCurrentChange(val) {
-        this.currentPage = val;
-      },
+    // 查看公告详情
+    seeDetail(row) {
+        this.$router.push({path:'/news/detail',query:{nid:row.nid}})
+    },
+    // 删除公告
+    deleteNews(row) {
+      deleteNews({nid:row.nid}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '删除成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+        row.visible = false
+      })
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
+    handleSizeChange(val) {
+      this.pagesize=val;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+    },
+    onSubmit() {
+
+    }
   }
 }
 </script>
