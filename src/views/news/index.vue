@@ -2,7 +2,7 @@
   <div class="news-manage-container">
       <div class="title"><span>公告管理</span></div>
       <div class="content">
-      <el-button style="background:#42b983;color:white;width:120px;" class="new-add" @click="dialogVisible = true">发布公告</el-button>
+      <el-button style="background:#42b983;color:white;width:120px;" class="new-add" @click="editNews">发布公告</el-button>
         <div class="table" style="width:1132px">
             <el-table
               :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
@@ -31,7 +31,7 @@
                 width="380">
                 <template slot-scope="scope">
                   <el-button style="background:#42b983;color:white;margin-left:30px;" @click="seeDetail(scope.row)">查看</el-button>
-                  <el-button style="background:#42b983;color:white;margin:0 30px;" @click="seeDetail(scope.row)">修改</el-button>
+                  <el-button style="background:#42b983;color:white;margin:0 30px;" @click="updateNews(scope.row)">修改</el-button>
                   <el-popover
                       placement="top"
                       title="确定删除此公告吗？"
@@ -138,6 +138,14 @@ export default {
         }
         row.visible = false
       })
+    },
+    // 发布公告
+    editNews() {
+      this.$router.push({path:'/news/edit',query:{type:'add'}})
+    },
+    // 修改公告
+    updateNews(row) {
+      this.$router.push({path:'/news/edit',query:{type:'update',nid:row.nid}})
     },
     handleClose(done) {
       this.$confirm('确认关闭？')

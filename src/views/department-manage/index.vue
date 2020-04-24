@@ -2,8 +2,8 @@
   <div class="department-manage-container">
       <div class="title"><span>部门管理</span></div>
       <div class="content">
-      <el-button style="background:#42b983;color:white;width:120px;" class="new-add" @click="dialogVisible = true">新增部门</el-button>
-        <div class="table" style="width:1252px">
+      <el-button style="background:#42b983;color:white;width:120px;" class="new-add" @click="addVisible = true">新增部门</el-button>
+        <div class="table" style="width:1302px">
             <el-table
               :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
               stripe
@@ -23,7 +23,7 @@
               <el-table-column
                 prop="introduce"
                 label="介绍"
-                width="350">
+                width="400">
               </el-table-column>
               <el-table-column
                 prop="regTime"
@@ -38,13 +38,13 @@
                   <el-button style="background:#42b983;color:white;margin:0 30px;" @click="alterDepartment(scope.row)">修改</el-button>
                   <el-popover
                       placement="top"
-                      title="确定删除此用户吗？"
+                      title="确定删除此部门吗？"
                       width="200"
                       trigger="click"
                       v-model="scope.row.visible"
                     >
                         <div style="text-align: right; margin: 0">
-                          <el-button type="primary" size="mini" @click="deleteUser(scope.row)">确定</el-button>
+                          <el-button type="primary" size="mini" @click="deleteDepartment(scope.row)">确定</el-button>
                           <el-button size="mini" @click="scope.row.visible = false">取消</el-button>
                         </div>
                         <el-button type="danger" slot="reference">删除</el-button>
@@ -104,10 +104,12 @@
 </template>
 
 <script>
-import { getDepartmentList,addDepartment,updateDepartment } from '@/api/department'
+import { getDepartmentList,addDepartment,updateDepartment,deleteDepartment } from '@/api/department'
+import { regToNormal } from '@/utils/format-date'
 
 export default {
   name: 'DepartmentManage',
+  inject:['reload'],    //注入App里的reload方法
   data() {
     return {
       addVisible: false,
@@ -130,6 +132,11 @@ export default {
   created() {
     getDepartmentList().then(response => {
       if(response.code === 200) {
+         response.data.forEach(item =>{
+          item.regTime = regToNormal(item.regTime)
+          item.visible = false
+        })
+        this.total = response.data.length
         this.tableData = response.data
       }
     })
@@ -141,9 +148,14 @@ export default {
     },
     // 确认新增部门信息
     addSubmit() {
-      addDepartment(this.addForm).then(response => {
+      const { name,introduce } = this.addForm
+      addDepartment({name,introduce}).then(response => {
         if(response.code === 200 ){
-          console.log('部门新增成功')
+          this.$message({
+            　  message: '新增成功',
+            　  type: 'success'
+         　})
+         　this.reload()
         }
       })
     },
@@ -156,11 +168,36 @@ export default {
     },
     // 确认修改部门信息
     alterSubmit() {
-      updateDepartment(this.alterForm).then(response => {
+      const { did,name,introduce } = this.alterForm
+      updateDepartment({did,name,introduce}).then(response => {
         if(response.code === 200 ){
-          console.log('部门修改成功')
+          this.$message({
+            　  message: '修改成功',
+            　  type: 'success'
+         　})
+         　this.reload()
         }
       })
+    },
+    // 确认删除部门信息
+    deleteDepartment(row) {
+      deleteDepartment({did:row.did}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '删除成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+        row.visible = false
+      })
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
     },
     handleSizeChange(val) {
       this.pagesize=val;

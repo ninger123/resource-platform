@@ -74,7 +74,7 @@ export default {
       refuseVisible: false,
       currentPage:1,
       pagesize:9,
-      total:6,
+      total:0,
       tableData: [],
       refuseForm: {
         id:'',
@@ -86,6 +86,7 @@ export default {
     getExamineList().then(response => {
       if(response.code === 200) {
         this.tableData = response.data
+        this.total = response.data.length
       }
     })
   },

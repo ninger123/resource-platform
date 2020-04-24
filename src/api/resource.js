@@ -7,6 +7,23 @@ export function getResourceType() {
         method: 'post'
     })
 }
+// 新增一个资源类型
+export function addResourceType(data) {
+    return request({
+        url:'/resource_type/add',
+        method:'post',
+        data
+    })
+}
+
+// 修改一个资源类型
+export function updateResourceType(data) {
+    return request({
+        url:'/resource_type/update',
+        method:'post',
+        data
+    })
+}
 
 // 删除一个资源类型(最基础版本,未做任何限制)
 export function deleteResourceType(data) {

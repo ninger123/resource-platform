@@ -77,19 +77,43 @@
         :before-close="handleClose">
         <el-form ref="addForm" :model="addForm" label-width="80px">
             <el-form-item label="资源名">
-                <el-input v-model="addForm.resourceName"></el-input>
+                <el-input v-model="addForm.resource_name"></el-input>
             </el-form-item>
             <el-form-item label="资源简介">
                 <el-input type="textarea" v-model="addForm.introduction"></el-input>
             </el-form-item>
-             <el-form-item label="图片">
-                <el-input v-model="addForm.image"></el-input>
+            <el-form-item label="图片">
+              <!--action为上传的地址，on-remove为文件列表移除文件时的钩子 -->
+              <el-upload
+                class="upload-photo"
+                action="http://p2959a9495.goho.co/fileUpload"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :on-success="successPhoto"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :file-list="attachList">
+                <el-button size="small" type="primary">+ 上传照片</el-button>
+              </el-upload>
             </el-form-item>
              <el-form-item label="说明文档">
-                <el-input v-model="addForm.file"></el-input>
+              <!--action为上传的地址，on-remove为文件列表移除文件时的钩子 -->
+              <el-upload
+                class="upload-doc"
+                action="http://p2959a9495.goho.co/fileUpload"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :on-success="successDoc"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :file-list="attachLists">
+                <el-button size="small" type="primary">+ 上传文档</el-button>
+              </el-upload>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">提交</el-button>
+                <el-button type="primary" @click="addSubmit">提交</el-button>
                 <el-button @click="addVisible = false">取消</el-button>
             </el-form-item>
         </el-form>
@@ -101,19 +125,45 @@
         :before-close="handleClose">
         <el-form ref="alterForm" :model="alterForm" label-width="80px">
             <el-form-item label="资源名">
-                <el-input v-model="alterForm.resourceName"></el-input>
+                <el-input v-model="alterForm.resource_name"></el-input>
             </el-form-item>
             <el-form-item label="资源简介">
                 <el-input type="textarea" v-model="alterForm.introduction"></el-input>
             </el-form-item>
-             <el-form-item label="图片">
-                <el-input v-model="alterForm.image"></el-input>
+            <el-form-item label="图片">
+              <!--action为上传的地址，on-remove为文件列表移除文件时的钩子 -->
+              <el-upload
+                class="upload-photo"
+                action="http://p2959a9495.goho.co/fileUpload"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :on-success="alterPhoto"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :file-list="list">
+                <el-button size="small" type="primary">+ 上传照片</el-button>
+                <div slot="tip" class="el-upload__tips">＊修改时不上传即保留当前的照片</div>
+              </el-upload>
             </el-form-item>
              <el-form-item label="说明文档">
-                <el-input v-model="alterForm.file"></el-input>
+              <!--action为上传的地址，on-remove为文件列表移除文件时的钩子 -->
+              <el-upload
+                class="upload-doc"
+                action="http://p2959a9495.goho.co/fileUpload"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :on-success="alterDoc"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :file-list="lists">
+                <el-button size="small" type="primary">+ 上传文档</el-button>
+                <div slot="tip" class="el-upload__tips">＊修改时不上传即保留当前的文档</div>
+              </el-upload>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">提交</el-button>
+                <el-button type="primary" @click="alterSubmit">提交</el-button>
                 <el-button @click="alterVisible = false">取消</el-button>
             </el-form-item>
         </el-form>
@@ -123,7 +173,7 @@
 </template>
 
 <script>
-import { getResourceType,deleteResourceType } from '@/api/resource'
+import { getResourceType,addResourceType,updateResourceType,deleteResourceType } from '@/api/resource'
 import { regToNormal } from '@/utils/format-date'
 
 export default {
@@ -131,23 +181,28 @@ export default {
   inject:['reload'],    //注入App里的reload方法
   data() {
     return {
-       addVisible: false,
-       alterVisible: false,
-       currentPage:1,
-       pagesize:9,
-       total:0,
-       tableData: [],
-       addForm: {
-        resourceName: '',
+      addVisible: false,
+      alterVisible: false,
+      currentPage:1,
+      pagesize:9,
+      total:0,
+      tableData: [],
+      attachList:[],
+      attachLists:[],
+      list:[],
+      lists:[],
+      addForm: {
+        resource_name: '',
         introduction: '',
-        image: '',
-        file:''
+        image_url: '',
+        file_url:''
       },
       alterForm: {
-        resourceName:'',
+        rtid:0,
+        resource_name:'',
         introduction:'',
-        image:'',
-        file:''
+        image_url:'',
+        file_url:''
       }
     }
   },
@@ -170,6 +225,12 @@ export default {
     },
     // 修改资源类型
     alterType(row) {
+      console.log(row)
+      this.alterForm.rtid = row.rtid
+      this.alterForm.resource_name = row.resourceName
+      this.alterForm.introduction = row.introduction
+      this.alterForm.image_url = row.image
+      this.alterForm.file_url = row.file
       this.alterVisible = true
     },
     // 删除资源类型
@@ -185,6 +246,32 @@ export default {
         row.visible = false
       })
     },
+    // 确认新增资源类型
+    addSubmit() {
+      const {resource_name,introduction,image_url,file_url} = this.addForm
+      addResourceType({resource_name,introduction,image_url,file_url}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '新增成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+      })
+    },
+    // 确认修改资源类型
+    alterSubmit() {
+      const {rtid,resource_name,introduction,image_url,file_url} = this.alterForm
+      updateResourceType({rtid,resource_name,introduction,image_url,file_url}).then(response => {
+        if(response.code === 200) { 
+          this.$message({
+            　  message: '修改成功',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+      })
+    },
     handleSizeChange(val) {
       this.pagesize=val;
     },
@@ -198,7 +285,31 @@ export default {
         })
         .catch(_ => {});
     },
-    onSubmit() {}
+    onSubmit() {},
+    handleRemove(file, fileList) {
+        console.log(file, fileList);
+    },
+    handlePreview(file) {
+        console.log(file);
+    },
+    handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+    },
+    successPhoto(response,file,fileList) {
+      this.addForm.image_url = response.data
+    },
+    successDoc(response,file,fileList) {
+      this.addForm.file_url = response.data
+    },
+    alterPhoto(response,file,fileList) {
+      this.alterForm.image_url = response.data
+    },
+    alterDoc(response,file,fileList) {
+      this.alterForm.file_url = response.data
+    },
   }
 }
 </script>

@@ -11,7 +11,7 @@ export function getDepartmentList() {
 // 新增一个部门
 export function addDepartment(data) {
   return request({
-    url: '/department/list',
+    url: '/department/add',
     method: 'post',
     data
   })
@@ -21,6 +21,15 @@ export function addDepartment(data) {
 export function updateDepartment(data) {
   return request({
     url:'/department/update',
+    method:'post',
+    data
+  })
+}
+
+// 删除一个部门
+export function deleteDepartment(data) {
+  return request({
+    url:'/department/delete',
     method:'post',
     data
   })

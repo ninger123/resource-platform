@@ -17,6 +17,15 @@ export function addHost(data) {
     })
 }
 
+// 修改一个主机信息
+export function updateHost(data) {
+    return request({
+        url:'/host_information/update',
+        method:'post',
+        data
+    })
+}
+
 // 删除主机信息
 export function deleteHost(data) {
     return request({

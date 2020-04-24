@@ -73,6 +73,11 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/contact-us',
+    component: () => import('@/views/applicant/contact-us/index'),
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/error-page/404'),
     hidden: true
@@ -98,7 +103,14 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/news/index'),
         name: 'NewsManage',
-        meta: { title: '公告管理',roles: ['controller'], icon: 'documentation' }
+        meta: { title: '公告管理',roles: ['controller'],noCache:true , icon: 'documentation' }
+      },
+      {
+        path: 'edit',
+        component: () => import('@/components/Tinymce/index'),
+        name:'NewsEdit',
+        hidden:true,
+        meta:{title: '发布文章',roles: ['controller'], noCache:true }
       },
       {
         path: 'detail',
@@ -186,6 +198,7 @@ export const asyncRoutes = [
         meta: {
           title: '人员审核',
           icon: 'documentation',
+          noCache: true,
           roles: ['controller']
         }
       },
@@ -196,6 +209,7 @@ export const asyncRoutes = [
         meta: {
           title: '所有人员',
           icon: 'documentation',
+          noCache: true,
           roles: ['controller']
         }
       },
@@ -209,7 +223,6 @@ export const asyncRoutes = [
       },
     ]
   },
-  
   {
     path: '/department-manage',
     component: Layout,

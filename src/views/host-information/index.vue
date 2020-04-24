@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { getHostList,deleteHost,addHost } from '@/api/host'
+import { getHostList,deleteHost,addHost,updateHost } from '@/api/host'
 import { getResourceType } from '@/api/resource'
 
 export default {
@@ -232,7 +232,7 @@ export default {
     // 修改主机信息
     alterSubmit() {
       const {hiid,name,resourceType,address,port} = this.alterForm
-      addHost({hiid,resource_name:resourceType,address,host_name:name,port}).then(response => {
+      updateHost({hiid,resource_name:resourceType,address,host_name:name,port}).then(response => {
         if(response.code === 200) {
           this.$message({
             　  message: '修改成功',

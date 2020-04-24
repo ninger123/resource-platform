@@ -58,7 +58,7 @@ export default {
        dialogVisible: false,
        currentPage:1,
        pagesize:9,
-       total:6,
+       total:0,
        tableData: [],
        form: {
           username: '',
@@ -71,6 +71,7 @@ export default {
     getAllUsers().then(response => {
       if(response.code === 200) {
         this.tableData = response.data
+        this.total = response.data.length
       }
     })
   },
