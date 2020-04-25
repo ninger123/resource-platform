@@ -72,10 +72,14 @@ export const constantRoutes = [
       }
     ]
   },
+  // 用户的页面 (联系我们页)
   {
     path: '/contact-us',
     component: () => import('@/views/applicant/contact-us/index'),
     hidden: true
+  },
+  {
+    path: ''
   },
   {
     path: '/404',
