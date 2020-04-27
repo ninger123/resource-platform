@@ -7,23 +7,43 @@
             <div class="zh">申请记录</div>
             <div class="en">Record</div>
           </div>
-          <div class="news-content"></div>
+          <div class="news-content">
+            <div class="list-content" v-for="item in recordList" :key="item.raid" @click="seeDetail(item)">
+                <img class="list-image" :src="item.resourceTypeImage" width="170" height="170" />
+                <div class="list-info">
+                  <div class="list-name">{{item.resourceType}}</div>
+                  <div class="list-time">{{item.createDate}}</div>
+                  <div class="progress">{{item.progress}}</div>
+                </div>
+                <div class="jiantou"> > </div>
+            </div>
+          </div>
         </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getUserApplication } from '@/api/application'
 
 export default {
   name: 'applicationRecord',
   data() {
     return {
+      recordList:[]
     }
   },
   created() {
+    getUserApplication().then(response => {
+      if(response.code === 200) {
+        this.recordList = response.data
+      }
+    })
   },
   methods: {
+    seeDetail(item) {
+
+    }
   }
 }
 </script>
@@ -63,6 +83,40 @@ export default {
             font-size: 16px;
             color: gray;
             margin-top: 10px;
+          }
+        }
+
+        .list-content{
+          height: 200px;
+          margin: 40px;
+          background-color:rgb(238, 238, 238);
+          display: flex;
+
+          .list-image{
+            margin: 15px;
+          }
+
+          .list-info{
+            margin-left: 130px;
+            margin-top: 40px;
+            width: 350px;
+
+            .list-time{
+              margin-top: 25px;
+              margin-bottom: 25px;
+              color: rgb(90, 90, 90);
+            }
+
+            .progress{
+              color: rgb(90, 90, 90);
+            }
+          }
+
+          .jiantou{
+            font-size: 40px;
+            color: rgb(112, 112, 112);
+            margin-left: 350px;
+            margin-top: 70px;
           }
         }
       }

@@ -10,19 +10,19 @@
                 class="el-menu-demo" 
                 mode="horizontal" 
                 @select="handleSelect">
-                <el-menu-item index="/user/home">
+                <el-menu-item index="/user/home" class="item">
                        <span slot="title">用户首页</span>
                 </el-menu-item>
-                <el-menu-item index="/user/resource-application">
+                <el-menu-item index="/user/resource-application" class="item">
                        <span slot="title">资源申请</span>
                 </el-menu-item>
-                <el-menu-item index="/user/application-record">
+                <el-menu-item index="/user/application-record" class="item">
                        <span slot="title">申请记录</span>
                 </el-menu-item>
-                <el-menu-item index="/user/news-notice">
+                <el-menu-item index="/user/news-notice" class="item">
                        <span slot="title">新闻公告</span>
                 </el-menu-item>
-                <el-menu-item index="/user/contact-us">
+                <el-menu-item index="/user/contact-us" class="item">
                        <span slot="title">联系我们</span>
                 </el-menu-item>
             </el-menu>
@@ -66,6 +66,15 @@ export default {
             height: 60px;
             width: 500px;
             margin:0 auto;
+
+            .el-menu-demo{
+                width: 600px;
+
+                .item{
+                width:120px;
+                font-size: 18px;
+            }
+            }
         }
     }
 }

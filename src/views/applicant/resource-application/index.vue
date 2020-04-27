@@ -7,23 +7,40 @@
             <div class="zh">资源申请</div>
             <div class="en">Resources</div>
           </div>
-          <div class="news-content"></div>
+          <div class="news-content">
+             <div class="list-content" v-for="item in list" :key="item.rtid" @click="seeDetail(item)">
+                <img class="list-image" :src="item.image" width="250" height="250" />
+                <div class="list-name">{{item.resourceName}}</div>
+            </div>
+          </div>
         </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getResourceType } from '@/api/resource'
 
 export default {
   name: 'resourceApplication',
   data() {
     return {
+      list:[]
     }
   },
   created() {
+    getResourceType().then(response => {
+      if(response.code === 200) {
+        this.list = response.data
+      }
+    })
   },
   methods: {
+    seeDetail(item) {
+      if(item.rtid === 3) {
+        
+      }
+    }
   }
 }
 </script>
@@ -63,6 +80,25 @@ export default {
             font-size: 16px;
             color: gray;
             margin-top: 10px;
+          }
+        }
+
+        .news-content{
+          margin: 30px;
+          display:flex;
+          flex-wrap: wrap;
+
+          .list-content{
+            margin: 22px;
+
+            .list-image{
+              margin-left: 25px;
+            }
+
+            .list-name{
+              margin-top: 10px;
+            }
+
           }
         }
       }
