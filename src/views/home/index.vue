@@ -7,14 +7,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import controllerIndex from './controller'
-import applicantIndex from './applicant'
 
 export default {
   name: 'Home',
-  components: { applicantIndex, controllerIndex },
+  components: { controllerIndex },
   data() {
     return {
-      currentRole: 'applicantIndex'
+      currentRole: 'controllerIndex'
     }
   },
   computed: {
@@ -25,9 +24,7 @@ export default {
   methods: {
   },
   created() {
-    if (this.roles.includes('applicant')) {
-      this.currentRole = 'applicantIndex'
-    } else if(this.roles.includes('controller')) {
+    if(this.roles.includes('controller')) {
       this.currentRole = 'controllerIndex'
     }
   }

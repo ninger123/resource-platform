@@ -34,6 +34,7 @@ export default {
     })
   },
   methods: {
+    regToTime
   }
 }
 </script>

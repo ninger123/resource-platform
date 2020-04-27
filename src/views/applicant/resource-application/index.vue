@@ -1,13 +1,13 @@
 <template>
   <div class="contact-us-container">
-    <div class="title">联系我们11111111</div>
+    <div class="title">资源申请</div>
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'contactUs',
+  name: 'resourceApplication',
   data() {
     return {
     }

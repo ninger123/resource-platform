@@ -78,8 +78,43 @@ export const constantRoutes = [
     component: () => import('@/views/applicant/contact-us/index'),
     hidden: true
   },
+  // 用户页
   {
-    path: ''
+    path:'/user',
+    component: () => import('@/views/applicant/user/index'),
+    hidden: true,
+    children:[
+      // 用户首页
+      {
+        path:'/user/home',
+        name:'userHome',
+        component:() => import('@/views/applicant/home/index'),
+      },
+      // 资源申请
+      {
+        path:'/user/resource-application',
+        name:'resourceApplication',
+        component:() => import('@/views/applicant/resource-application/index'),
+      },
+       // 申请记录
+       {
+        path:'/user/application-record',
+        name:'applicationRecord',
+        component:() => import('@/views/applicant/application-record/index'),
+      },
+       // 新闻公告
+       {
+        path:'/user/news-notice',
+        name:'newsNotice',
+        component:() => import('@/views/applicant/news-notice/index'),
+      },
+      // 联系我们
+      {
+        path:'/user/contact-us',
+        name:'contactUs',
+        component:() => import('@/views/applicant/contact-us/index'),
+      }
+    ]
   },
   {
     path: '/404',

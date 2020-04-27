@@ -46,7 +46,7 @@ const actions = {
         commit('SET_TOKEN', data.token)
         // 把token存到cookie
         setToken(data.token)
-        resolve()
+        resolve(response)
       }).catch(error => {
         reject(error)
       })

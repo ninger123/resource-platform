@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { getInfo } from '@/api/user'
 
 export default {
   name: 'Login',
@@ -129,8 +130,14 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: '/', query: this.otherQuery })
+            .then(response => {
+              getInfo(response.data.token).then(response => {
+                if(response.data.userRole === 1) {
+                  this.$router.push('/user/home')
+                } else {
+                  this.$router.push({ path: '/', query: this.otherQuery })
+                }
+              })
               this.loading = false
             })
             .catch(() => {
