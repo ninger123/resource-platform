@@ -1,6 +1,15 @@
 <template>
   <div class="contact-us-container">
-    <div class="title">联系我们11111111</div>
+    <div class="content-container">
+        <div class="img-container"></div>
+        <div class="news-container">
+          <div class="title">
+            <div class="zh">联系我们</div>
+            <div class="en">Contact</div>
+          </div>
+          <div class="news-content"></div>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -10,8 +19,8 @@ export default {
   name: 'contactUs',
   data() {
     return {
-    }
-  },
+    } 
+  },  
   created() {
   },
   methods: {
@@ -21,15 +30,42 @@ export default {
 
 <style lang="scss" scoped>
   .contact-us-container {
-    padding: 32px;
-    min-height: 100vh;
-    background-color: rgb(240, 242, 245);
+    background-color: white;
     position: relative;
 
-    .title {
-    color:rgb(48,65,86);
-    font-weight: bold;
-    font-size: 24px;
+    .content-container{
+
+      .img-container{
+        width: 100%;
+        height:400px;
+        background-image: url(../pic/关于我们.jpg);
+        background-repeat:no-repeat;
+        background-size:100% 100%;
+        z-index:0;
+      }
+
+      .news-container{
+        width: 1200px;
+        z-index: 2;
+        margin: -100px auto 0;
+        border:1px solid rgb(224, 224, 224);
+        background-color: white;
+
+        .title{
+          height: 100px;
+          border-bottom: 1px solid rgb(224, 224, 224);
+          padding-top: 25px;
+          padding-left: 40px;
+          .zh {
+            font-size:24px;
+          }
+          .en {
+            font-size: 16px;
+            color: gray;
+            margin-top: 10px;
+          }
+        }
+      }
     }
   }
 </style>

@@ -6,6 +6,16 @@
                 <span class="list-title">{{item.title}}</span>
                 <span class="list-time">{{item.regTime}}</span>
             </div>
+            <div class="pagination">
+              <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :page-size="pagesize"
+                  background
+                  layout="total, prev, pager, next, jumper"
+                  :total="total">
+              </el-pagination>
+        </div>
         </div>
     </div>
 </template>
@@ -18,7 +28,10 @@ export default {
   name: 'newsList',
   data() {
     return {
-      newslist:[]
+       currentPage:1,
+       pagesize:9,
+       total:0,
+       newslist:[]
     }
   },
   created() {
@@ -27,6 +40,7 @@ export default {
         response.data.forEach(item =>{
           item.regTime = regToNormal(item.regTime)
         })
+        this.total = response.data.length
         this.newslist = response.data
       }
     })
@@ -34,7 +48,13 @@ export default {
   methods: {
     seeDetail(item) {
         this.$emit('func',item.nid)
-    }
+    },
+    handleSizeChange(val) {
+      this.pagesize=val;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+    },
   }
 }
 </script>
@@ -53,9 +73,13 @@ export default {
 
             .list-container{
               width: 800px;
-              height:650px;
               padding: 20px;
               margin: 0 auto;
+
+              .pagination{
+                width: 500px;
+                margin:30px auto;
+            }
 
               .list-content{
                 width: 700px;
