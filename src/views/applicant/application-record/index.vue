@@ -25,6 +25,7 @@
 
 <script>
 import { getUserApplication } from '@/api/application'
+import { regToNormal } from '@/utils/format-date'
 
 export default {
   name: 'applicationRecord',
@@ -36,18 +37,21 @@ export default {
   created() {
     getUserApplication().then(response => {
       if(response.code === 200) {
+        response.data.forEach(element => {
+          element.createDate = regToNormal(element.createDate)
+        });
         this.recordList = response.data
       }
     })
   },
   methods: {
     seeDetail(item) {
-
+      this.$router.push({path:'/user/application-detail',query:{raid:item.raid}})
     }
   }
 }
 </script>
-
+5555
 <style lang="scss" scoped>
   .application-record-container {
     background-color: white;
@@ -91,6 +95,7 @@ export default {
           margin: 40px;
           background-color:rgb(238, 238, 238);
           display: flex;
+          cursor: pointer;
 
           .list-image{
             margin: 15px;

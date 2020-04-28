@@ -97,10 +97,16 @@ export const constantRoutes = [
         component:() => import('@/views/applicant/resource-application/index'),
       },
        // 申请记录
-       {
+      {
         path:'/user/application-record',
         name:'applicationRecord',
         component:() => import('@/views/applicant/application-record/index'),
+      },
+       // 申请记录详情
+       {
+        path:'/user/application-detail',
+        name:'applicationDetail',
+        component:() => import('@/views/applicant/application-record/detail'),
       },
        // 新闻公告
        {

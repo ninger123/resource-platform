@@ -59,31 +59,6 @@
               </el-pagination>
             </div>
         </div>
-    <el-dialog
-        title="添加用户"
-        :visible.sync="dialogVisible"
-        width="30%"
-        :before-close="handleClose">
-        <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="用户名">
-                <el-input v-model="form.username"></el-input>
-            </el-form-item>
-            <el-form-item label="密码">
-                <el-input v-model="form.password"></el-input>
-            </el-form-item>
-            <el-form-item label="权限授权">
-                <el-radio-group v-model="form.userRole">
-                    <el-radio label="管理员"></el-radio>
-                    <el-radio label="教师"></el-radio>
-                    <el-radio label="学生"></el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onSubmit">确定</el-button>
-                <el-button @click="dialogVisible = false">取消</el-button>
-            </el-form-item>
-        </el-form>
-    </el-dialog>
     </div>
   </div>
 </template>
@@ -97,7 +72,6 @@ export default {
   inject:['reload'],    //注入App里的reload方法
   data() {
     return {
-       dialogVisible: false,
        currentPage:1,
        pagesize:9,
        total:0,
@@ -160,9 +134,6 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
     },
-    onSubmit() {
-
-    }
   }
 }
 </script>
