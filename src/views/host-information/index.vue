@@ -144,7 +144,7 @@ export default {
       addVisible: false,
       alterVisible: false,
       currentPage:1,
-      pagesize:9,
+      pagesize:6,
       total:0,
       tableData: [],
       resourceTypes:[],

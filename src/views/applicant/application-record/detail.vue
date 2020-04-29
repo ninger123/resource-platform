@@ -31,7 +31,7 @@
                   <div class="right">
                       <div class="right-content" v-if="this.progress !== '审核中' ">
                         <div class="remain">剩余使用时间: {{this.remaining_time}}天</div>
-                        <div class="remain">{{this.remaining_time/this.time}}%</div>
+                        <div class="remain">{{this.percentage}}%</div>
                         <div>资源剩余使用时间</div>
                       </div>
                   </div>
@@ -62,7 +62,8 @@ export default {
         passDate:'',
         time:'',
         purpose:'',
-        remaining_time:''
+        remaining_time:'',
+        percentage:''
     }
   },
   created() {
@@ -86,6 +87,8 @@ export default {
               this.time = time
               this.purpose = purpose
               this.remaining_time = remaining_time
+              let percentage = (remaining_time / time)*100
+              this.percentage = percentage.toFixed(1)
           }
       })
   },
@@ -224,6 +227,7 @@ export default {
 
                     }
                     .remain{
+                      width: 200px;
                         font-size: 20px;
                         font-weight: bold;
                     }

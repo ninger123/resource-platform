@@ -2,7 +2,7 @@
     <div class="right-container">
         <div class="line"></div>
         <div class="list-container">
-            <div class="list-content" v-for="item in newslist" :key="item.nid" @click="seeDetail(item)">
+            <div class="list-content" v-for="item in pageTableData" :key="item.nid" @click="seeDetail(item)">
                 <span class="list-title">{{item.title}}</span>
                 <span class="list-time">{{item.regTime}}</span>
             </div>
@@ -15,7 +15,7 @@
                   layout="total, prev, pager, next, jumper"
                   :total="total">
               </el-pagination>
-        </div>
+            </div>
         </div>
     </div>
 </template>
@@ -45,6 +45,18 @@ export default {
       }
     })
   },
+  computed:{
+            pageTableData(){
+                let pages=Math.ceil(this.newslist.length/9);//4为每页设置数量
+                let newList=[];
+                for(let i=0;i<pages;i++){
+                let sonList=[];
+                sonList=this.newslist.slice(i*9,i*9+9);//4为每页设置数量
+                newList.push(sonList)
+                }
+                return newList[this.currentPage-1]
+            }
+},
   methods: {
     seeDetail(item) {
         this.$emit('func',item.nid)

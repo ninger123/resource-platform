@@ -8,7 +8,7 @@
             <div class="en">Record</div>
           </div>
           <div class="news-content">
-            <div class="list-content" v-for="item in recordList" :key="item.raid" @click="seeDetail(item)">
+            <div class="list-content" v-for="item in pageTableData" :key="item.raid" @click="seeDetail(item)">
                 <img class="list-image" :src="item.resourceTypeImage" width="170" height="170" />
                 <div class="list-info">
                   <div class="list-name">{{item.resourceType}}</div>
@@ -16,6 +16,16 @@
                   <div class="progress">{{item.progress}}</div>
                 </div>
                 <div class="jiantou"> > </div>
+            </div>
+            <div class="pagination">
+              <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :page-size="pagesize"
+                  background
+                  layout="total, prev, pager, next, jumper"
+                  :total="total">
+              </el-pagination>
             </div>
           </div>
         </div>
@@ -31,7 +41,10 @@ export default {
   name: 'applicationRecord',
   data() {
     return {
-      recordList:[]
+      recordList:[],
+      currentPage:1,
+      pagesize:4,
+      total:0,
     }
   },
   created() {
@@ -40,18 +53,37 @@ export default {
         response.data.forEach(element => {
           element.createDate = regToNormal(element.createDate)
         });
+        this.total = response.data.length;
         this.recordList = response.data
       }
     })
   },
+computed:{
+            pageTableData(){
+                let pages=Math.ceil(this.recordList.length/4);//4为每页设置数量
+                let newList=[];
+                for(let i=0;i<pages;i++){
+                  let sonList=[];
+                  sonList=this.recordList.slice(i*4,i*4+4);//4为每页设置数量
+                  newList.push(sonList)
+                }
+                return newList[this.currentPage-1]
+            }
+},
   methods: {
     seeDetail(item) {
       this.$router.push({path:'/user/application-detail',query:{raid:item.raid}})
-    }
+    },
+    handleSizeChange(val) {
+      this.pagesize=val;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+    },
   }
 }
 </script>
-5555
+
 <style lang="scss" scoped>
   .application-record-container {
     background-color: white;
@@ -88,6 +120,11 @@ export default {
             color: gray;
             margin-top: 10px;
           }
+        }
+
+        .pagination{
+          width: 600px;
+          margin: 20px auto;
         }
 
         .list-content{
