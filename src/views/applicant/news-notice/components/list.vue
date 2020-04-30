@@ -50,9 +50,9 @@ export default {
                 let pages=Math.ceil(this.newslist.length/9);//4为每页设置数量
                 let newList=[];
                 for(let i=0;i<pages;i++){
-                let sonList=[];
-                sonList=this.newslist.slice(i*9,i*9+9);//4为每页设置数量
-                newList.push(sonList)
+                  let sonList=[];
+                  sonList=this.newslist.slice(i*9,i*9+9);//4为每页设置数量
+                  newList.push(sonList)
                 }
                 return newList[this.currentPage-1]
             }

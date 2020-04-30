@@ -1,19 +1,22 @@
 <template>
-  <div class="application-record-container">
-    <div class="content-container">
-        <div class="img-container"></div>
-        <div class="news-container">
-          <div class="title">
-            <div class="zh">申请详情</div>
-            <div class="en">Record</div>
-          </div>
+  <div class="application-detail-container">
+      <div class="title"><span>申请记录 > 详情</span></div>
+      <div class="content">
           <div class="news-content">
-              <el-button class="back" @click="back">返回上一页</el-button>
               <div class="progress">{{this.progress}}</div>
-              <div class="content">
+              <div class="content" v-if="progress === '已拒绝'">
+                  <div class="reason">
+                      <div>申请编号: {{this.raid}}</div>
+                      <div>申请人: {{this.user_name}}</div>
+                      <div>拒绝理由:
+                          <el-input :rows="5" style="margin-top: 20px;" type="textarea" v-model="this.refuse_reason" disabled></el-input>
+                     </div>
+                  </div>
+              </div>
+              <div class="content" v-else>
                   <div class="left">
                       <div class="sleft">
-                        <div>申请编号: {{this.raid}}</div>  
+                          <div>申请编号: {{this.raid}}</div>
                           <div>申请人: {{this.user_name}}</div>
                           <div>资源类型: {{this.resourceType}}</div>
                           <div>用户名: {{this.host_username}}</div>
@@ -38,8 +41,7 @@
                   </div>
               </div>
           </div>
-        </div>
-    </div>
+      </div>
   </div>
 </template>
 
@@ -48,7 +50,7 @@ import { getApplicationDetail } from '@/api/application'
 import { regToNormal } from '@/utils/format-date'
 
 export default {
-  name: 'applicationDetail',
+  name: 'ApplicationDetail',
   data() {
     return {
         raid:this.$route.query.raid || '',
@@ -64,14 +66,15 @@ export default {
         time:'',
         purpose:'',
         remaining_time:'',
-        percentage:''
+        percentage:'',
+        refuse_reason:''
     }
   },
   created() {
       getApplicationDetail({raid:this.raid}).then(response => {
           if(response.code=== 200) {
               const { progress,user_name,resourceType,host_username,host_password,
-              operatingSystem,port,createDate,passDate,time,purpose,remaining_time } = response.data
+              operatingSystem,port,createDate,passDate,time,purpose,remaining_time,refuse_reason } = response.data
               this.progress = progress
               this.user_name = user_name
               this.resourceType = resourceType
@@ -79,6 +82,7 @@ export default {
               this.host_password = host_password
               this.operatingSystem = operatingSystem
               this.port = port
+              this.refuse_reason =refuse_reason
               this.createDate = regToNormal(createDate)
               if(passDate) {
                   this.passDate = regToNormal(passDate)
@@ -94,86 +98,38 @@ export default {
       })
   },
   methods: {
-      back() {
-          this.$router.push('/user/application-record')
-      }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .application-record-container {
-    background-color: white;
+  .application-detail-container {
+    min-height: 100vh;
+    background-color: rgb(240, 242, 245);
     position: relative;
-
-    .content-container{
-
-      .img-container{
-        width: 100%;
-        height:400px;
-        background-image: url(../pic/关于我们.jpg);
-        background-repeat:no-repeat;
-        background-size:100% 100%;
-        z-index:0;
+    .title{
+      height: 45px;
+      background-color: white;
+      border-bottom:1px solid rgb(204, 202, 202);
+      font-weight: bold;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      span {
+        margin-left: 15px;
       }
+    }
+    .content{
+      margin-left: 40px;
+      margin-top: 20px;
 
-      .news-container{
-        width: 1200px;
-        z-index: 2;
-        margin: -100px auto 0;
-        border:1px solid rgb(224, 224, 224);
-        background-color: white;
-
-        .title{
-          height: 100px;
-          border-bottom: 1px solid rgb(224, 224, 224);
-          padding-top: 25px;
-          padding-left: 40px;
-          .zh {
-            font-size:24px;
+      .reason{
+          width: 400px;
+          margin: 120px auto;
+          div {
+              margin: 40px auto;
           }
-          .en {
-            font-size: 16px;
-            color: gray;
-            margin-top: 10px;
-          }
-        }
-
-        .list-content{
-          height: 200px;
-          margin: 40px;
-          background-color:rgb(238, 238, 238);
-          display: flex;
-
-          .list-image{
-            margin: 15px;
-          }
-
-          .list-info{
-            margin-left: 130px;
-            margin-top: 40px;
-            width: 350px;
-
-            .list-time{
-              margin-top: 25px;
-              margin-bottom: 25px;
-              color: rgb(90, 90, 90);
-            }
-
-            .progress{
-              color: rgb(90, 90, 90);
-            }
-          }
-
-          .jiantou{
-            font-size: 40px;
-            color: rgb(112, 112, 112);
-            margin-left: 350px;
-            margin-top: 70px;
-          }
-        }
       }
-
       .news-content{
 
             .back{
@@ -184,12 +140,13 @@ export default {
               font-size: 24px;
               width:100px;
               height: 40px;
-              margin: 20px 1000px 30px;
+              margin: 20px 1000px 15px;
             }
 
             .content{
                 display: flex;
                 border: 1px solid rgb(224, 224, 224);
+                background: white;
                 width: 1200px;
                 height: 600px;
                 .left {

@@ -59,19 +59,6 @@ export const constantRoutes = [
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/home',
-    children: [
-      {
-        path: 'home',
-        component: () => import('@/views/home/index'),
-        name: 'Home',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
   // 用户的页面 (联系我们页)
   {
     path: '/contact-us',
@@ -103,7 +90,7 @@ export const constantRoutes = [
         component:() => import('@/views/applicant/application-record/index'),
       },
        // 申请记录详情
-       {
+      {
         path:'/user/application-detail',
         name:'applicationDetail',
         component:() => import('@/views/applicant/application-record/detail'),
@@ -139,6 +126,19 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        component: () => import('@/views/home/index'),
+        name: 'Home',
+        meta: { title: '首页',roles: ['controller'], icon: 'dashboard', affix: true }
+      }
+    ]
+  },
   {
     path: '/news',
     component: Layout,
@@ -191,7 +191,7 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/application-auditing',
+    path: '/application',
     component: Layout,
     redirect: '/application-manage/auditing',
     alwaysShow: true, // will always show the root menu
@@ -199,7 +199,7 @@ export const asyncRoutes = [
     meta: {
       title: '申请管理',
       icon: 'edit',
-      roles: ['controller']
+      roles: ['controller'],
     },
     children: [
       {
@@ -209,6 +209,7 @@ export const asyncRoutes = [
         meta: {
           title: '申请审核',
           icon: 'documentation',
+          noCache:true,
           roles: ['controller']
         }
       },
@@ -218,7 +219,18 @@ export const asyncRoutes = [
         name: 'RecordApplication',
         meta: {
           title: '申请记录',
+          noCache:true,
           icon: 'documentation',
+          roles: ['controller']
+        }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/application-manage/detail'),
+        name: 'ApplicationDetail',
+        hidden:true,
+        meta: {
+          title: '申请详情',
           roles: ['controller']
         }
       }
