@@ -24,7 +24,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="alterSubmit">修改</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="cancel">取消</el-button>
             </el-form-item>
         </el-form>
        </div>
@@ -62,7 +62,7 @@ export default {
   created() {
   },
   methods: {
-      alterSubmit() {
+    alterSubmit() {
           this.$refs.alterForm.validate(valid => {
             if (valid) {
             alterPassword({uid:this.uid,old_password:this.alterForm.oldPassword,new_password:this.alterForm.password}).then(response => {
@@ -79,7 +79,10 @@ export default {
                 return false
             }
            })
-        }
+    },
+    cancel() {
+        this.$router.push({path:'/user/home'})
+    }
   }
 }
 </script>
