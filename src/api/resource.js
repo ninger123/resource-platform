@@ -33,3 +33,11 @@ export function deleteResourceType(data) {
         data
     })
 }
+
+// 管理员首页
+export function getStatistics() {
+    return request({
+        url:'resource_application/statistics',
+        method:'post'
+    })
+}

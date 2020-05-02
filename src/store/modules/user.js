@@ -63,15 +63,17 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        let avatar = 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3305298991,2024211813&fm=26&gp=0.jpg'
+        let avatar
         const roleType = data.userRole
         let roles
         if(roleType === 1 ) {
           // 申请者
           roles = ['applicant']
+          avatar = 'http://ku.90sjimg.com/element_origin_min_pic/18/03/28/b936d3e8a3f561547822abc82a2c6a37.jpg'
         } else if(roleType === 2) {
           // 管理员
           roles = ['controller']
+          avatar = 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3305298991,2024211813&fm=26&gp=0.jpg'
         }
 
         const uid = data.uid

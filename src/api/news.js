@@ -8,6 +8,13 @@ export function getNewsList() {
     })
 }
 
+export function getHomeNewsList() {
+  return request({
+    url: 'news/home_list',
+    method: 'post'
+})
+}
+
 // 发布一个公告,通过前端富文本
 export function addNews(data) {
   return request({

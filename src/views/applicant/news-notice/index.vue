@@ -38,6 +38,10 @@ export default {
   },  
   components:{ newsList,newsDetail },
   created() {
+    if(this.$route.query.nid) {
+      this.listShow = false
+      this.nid = this.$route.query.nid
+    }
   },
   methods: {
     getMsgFormSon(data){
