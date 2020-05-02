@@ -87,7 +87,7 @@
           :type="passwordType"
           placeholder="请再次输入密码"
           name="rePassword"
-          @keyup.enter.native="handleLogin"
+          @keyup.enter.native="handleRegist"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
@@ -95,7 +95,7 @@
       </el-form-item>
       </div>
 
-      <el-button :loading="loading" type="primary" style="width:74%;margin-top:20px;margin-bottom:30px;margin-left:110px;" @click.native.prevent="handleLogin">注册</el-button>
+      <el-button :loading="loading" type="primary" style="width:74%;margin-top:20px;margin-bottom:30px;margin-left:110px;" @click.native.prevent="handleRegist">注册</el-button>
     </el-form>
   </div>
 </template>
@@ -176,7 +176,7 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
+    handleRegist() {
       this.$refs.registForm.validate(valid => {
         if (valid) {
           this.loading = true

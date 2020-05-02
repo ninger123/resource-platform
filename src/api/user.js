@@ -31,6 +31,33 @@ export function regist(data) {
   })
 }
 
+// 忘记密码借口
+export function forgetPassword(data) {
+  return request({
+    url:'/user/forget_password',
+    method:'post',
+    data
+  })
+}
+
+// 找回密码
+export function findPassword(data) {
+  return request({
+    url:'/user/goto_find_password_back',
+    method:'post',
+    data
+  })
+}
+
+// 用户修改密码
+export function alterPassword(data) {
+  return request({
+    url:'/user/change_password',
+    method:'post',
+    data
+  })
+}
+
 // 管理员查询所有用户的列表
 export function getAllUsers() {
   return request({

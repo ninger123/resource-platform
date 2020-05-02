@@ -50,20 +50,35 @@
         <!-- 给vue组件绑定事件的时候必须加上native,否则会认为监听的是来自item组件自定义的事件/ prevent是用来阻止默认事件的 !-->
       </el-form>
       <div class="tips">
-        <router-link style="margin-right:20px;" to="/regist">注册用户</router-link>
-        <router-link style="margin-left:272px;" to="/regist">忘记密码</router-link>
+        <div><router-link to="/regist">注册用户</router-link></div>
+        <div class="forget" @click="forgetPassword">忘记密码</div>
       </div>
     </div>
+    <el-dialog
+        title="密码找回"
+        :visible.sync="visible"
+        width="20%"
+        style="background: #2d3a4b;"
+        :before-close="handleClose">
+            <div style="margin-left: 20px;"><span style="font-size:18px;font-weight:bold;margin-right: 15px;">邮箱:</span> <input style="height: 40px;width: 220px;" v-model="e_mail" placeholder="请输入需要找回密码的邮箱"></input></div>
+            <div style="margin-top: 30px;">
+              <el-button type="primary" @click="submit" style="width:80px;height:40px;margin-left:60px;font-size: 16px;">确定</el-button>
+              <el-button @click="visible = false" style="width:80px;height:40px;margin-left:30px;font-size: 16px;">取消</el-button>
+            </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getInfo } from '@/api/user'
+import { getInfo,forgetPassword } from '@/api/user'
 
 export default {
   name: 'Login',
+  inject:['reload'],    //注入App里的reload方法
   data() {
     return {
+      visible:false,
+      e_mail:'',
       loginForm: {
         username: '',
         password: ''
@@ -82,7 +97,6 @@ export default {
       otherQuery: {}
     }
   },
-  // ?watch没看懂
   watch: {
     $route: {
       handler: function(route) {
@@ -112,6 +126,23 @@ export default {
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
 
+    // 忘记密码
+    forgetPassword() {
+      this.visible = true;
+    },
+
+    // 发送邮箱找回密码
+    submit() {
+      forgetPassword({e_mail:this.e_mail}).then(response => {
+        if(response.code === 200) {
+          this.$message({
+            　  message: '发送成功,请前往邮箱查看',
+            　  type: 'success'
+         　})
+         　this.reload()
+        }
+      })
+    },
     //展示密码
     showPwd() {
       if (this.passwordType === 'password') {
@@ -123,7 +154,13 @@ export default {
         this.$refs.password.focus()
       })
     },
-    
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
     // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -273,6 +310,12 @@ $light_gray:#eee;
     font-size: 14px;
     color: #fff;
     margin-bottom: 10px;
+    display: flex;
+    justify-content:space-between;
+
+    .forget{
+      cursor: pointer;
+    }
 
     span {
       &:first-of-type {

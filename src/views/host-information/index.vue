@@ -123,7 +123,7 @@
                 <el-input v-model="alterForm.port"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="alterSubmit">确定</el-button>
+                <el-button type="primary" @click="alterSubmit">找回</el-button>
                 <el-button @click="alterVisible = false">取消</el-button>
             </el-form-item>
         </el-form>

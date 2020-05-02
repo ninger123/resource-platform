@@ -55,6 +55,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/find_password',
+    component: () => import('@/views/find-password/index'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -106,7 +111,13 @@ export const constantRoutes = [
         path:'/user/contact-us',
         name:'contactUs',
         component:() => import('@/views/applicant/contact-us/index'),
-      }
+      },
+      // 修改密码
+      {
+        path: '/user/alter-password',
+        name:'alterPassword',
+        component: () => import('@/views/applicant/alter-password/index')
+      },
     ]
   },
   {

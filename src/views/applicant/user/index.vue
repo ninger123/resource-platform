@@ -36,6 +36,9 @@
                 <router-link to="/user/home">
                     <el-dropdown-item>首页</el-dropdown-item>
                 </router-link>
+                <router-link to="/user/alter-password">
+                    <el-dropdown-item>修改密码</el-dropdown-item>
+                </router-link>
                 <a target="_blank" href="http://www.xiyou.edu.cn/">
                     <el-dropdown-item>西邮官网</el-dropdown-item>
                 </a>
